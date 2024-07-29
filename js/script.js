@@ -17,6 +17,21 @@ const commands = [
     { command: "git remote remove <nombre>", description: "Elimina un repositorio remoto especificado por su nombre." },
     { command: "git fetch <remote>", description: "Descarga objetos y refs desde otro repositorio." },
     { command: "git pull <remote> <branch>", description: "Descarga y fusiona cambios de una rama específica desde otro repositorio." },
+    { command: "git config --global --add safe.directory <ruta>", description: "Añade un directorio seguro para Git." },
+    { command: "git config --global --add safe.directory <ruta> && cd <ruta> && git remote set-url origin <nuevo_url_remoto> && git remote -v && git push -u origin --all && git push origin --tags", description: "1. Agrega la ruta del directorio a la lista de directorios seguros de Git. </br> 2. Cambia al directorio especificado.</br> 3. Cambia la URL del repositorio remoto. </br> 4. Verifica las URLs remotas configuradas.</br> 5. Empuja todos los branches al repositorio remoto.</br> 6. Empuja todas las etiquetas al repositorio remoto." },
+    // postgres
+    {
+        command: `
+        -- Otorgar permisos de uso en el esquema <nombre_esquema>
+        GRANT USAGE ON SCHEMA <nombre_esquema> TO <usuario>;
+    
+        -- Otorgar permisos de solo lectura a la vista <vista_o_tabla> en el esquema <nombre_esquema>
+        GRANT SELECT ON <nombre_esquema>.<vista_o_tabla> TO <usuario>;
+        `,
+        description: "Otorgar permisos de uso en el esquema <nombre_esquema> y permisos de solo lectura a las vistas vista1 y vista2."
+    },
+    // Otorgar permisos de solo lectura a la vista <vista_o_tabla> en el esquema <nombre_esquema>
+    { command: "GRANT SELECT ON <nombre_esquema>.<vista_o_tabla> TO <usuario>;", description: "Otorgar permisos de solo lectura a la vista <vista_o_tabla> en el esquema <nombre_esquema>." },
     { command: "sudo apt update", description: "Actualiza la lista de paquetes disponibles." },
     { command: "sudo apt upgrade", description: "Actualiza los paquetes instalados a sus versiones más recientes." },
     { command: "sudo apt install <paquete>", description: "Instala el paquete especificado." },
@@ -31,7 +46,7 @@ const commands = [
     { command: "sudo service <servicio> stop", description: "Detiene un servicio (alternativa a systemctl)." },
     { command: "sudo service <servicio> restart", description: "Reinicia un servicio (alternativa a systemctl)." },
     { command: "sudo service <servicio> status", description: "Muestra el estado de un servicio (alternativa a systemctl)." },
-    { command: "cd /ruta/al/directorio", description: "Cambia el directorio de trabajo." },
+    { command: "cd <ruta_directorio>", description: "Cambia el directorio de trabajo." },
     { command: "ls -la", description: "Lista los archivos y directorios con detalles." },
     { command: "chmod +x <archivo>", description: "Cambia los permisos de un archivo para hacerlo ejecutable." },
     { command: "chown <usuario>:<grupo> <archivo>", description: "Cambia el propietario y el grupo de un archivo." },
@@ -48,43 +63,44 @@ const commands = [
     { command: "sudo systemctl status nginx", description: "Muestra el estado actual del servicio Nginx." },
     { command: "sudo journalctl -u nginx", description: "Muestra los registros (logs) del servicio Nginx." },
     { command: "sudo tail -f /var/log/nginx/error.log", description: "Muestra en tiempo real el archivo de log de errores de Nginx." },
-    { command: "sudo tail -f /var/log/nginx/access.log", description: "Muestra en tiempo real el archivo de log de accesos de Nginx." }
-    {command: "php artisan list", description: "Muestra una lista de todos los comandos disponibles de Artisan."},
-    {command: "php artisan help <comando>", description: "Muestra ayuda para un comando específico de Artisan."},
-    {command: "php artisan make:model <NombreModelo>", description: "Crea un nuevo modelo."},
-    {command: "php artisan make:controller <NombreControlador>", description: "Crea un nuevo controlador."},
-    {command: "php artisan make:migration <NombreMigration>", description: "Crea una nueva migración de base de datos."},
-    {command: "php artisan migrate", description: "Ejecuta las migraciones pendientes de la base de datos."},
-    {command: "php artisan migrate:rollback", description: "Revierte la última migración de base de datos."},
-    {command: "php artisan db:seed", description: "Llena la base de datos con registros de prueba."},
-    {command: "php artisan route:list", description: "Muestra una lista de todas las rutas registradas."},
-    {command: "php artisan cache:clear", description: "Borra todas las entradas del caché."},
-    {command: "php artisan config:cache", description: "Crea un archivo caché para acelerar la carga de configuración."},
-    {command: "php artisan view:clear", description: "Borra todas las vistas compiladas."},
-    {command: "php artisan storage:link", description: "Crea el enlace simbólico de almacenamiento para la carpeta 'public'."},
-    {command: "php artisan key:generate", description: "Genera una nueva clave de aplicación."},
-    {command: "php artisan serve", description: "Inicia el servidor de desarrollo de Laravel."},
-    {command: "php artisan queue:work", description: "Escucha la cola de trabajos para ejecutarlos."},
-    {command: "php artisan schedule:run", description: "Ejecuta los trabajos programados definidos en 'App\Console\Kernel'."},
-    {command: "php artisan vendor:publish", description: "Publica cualquier recurso de un proveedor que no esté publicado todavía."},
-    {command: "php artisan route:cache", description: "Crea un archivo caché para acelerar la registración de rutas."},
-    {command: "php artisan route:clear", description: "Borra el archivo de caché de rutas."},
-    {command: "php artisan event:generate", description: "Genera clases de evento para eventos y listeners."},
-    {command: "php artisan make:middleware <NombreMiddleware>", description: "Crea un nuevo middleware."},
-    {command: "php artisan optimize", description: "Optimiza la carga de clases para un mejor rendimiento."},
-    {command: "php artisan down", description: "Pone la aplicación en modo de mantenimiento."},
-    {command: "php artisan up", description: "Saca la aplicación del modo de mantenimiento."},
-    {command: "php artisan tinker", description: "Inicia un REPL (Read-Eval-Print Loop) interactivo para Laravel."},
-    {command: "php artisan make:policy <NombrePolitica>", description: "Crea una nueva política de autorización."},
-    {command: "php artisan queue:failed", description: "Lista todos los trabajos de cola fallidos."},
-    {command: "php artisan queue:retry <ID>", description: "Reintenta un trabajo de cola fallido por su ID."},
-    {command: "php artisan queue:flush", description: "Borra todos los trabajos de cola fallidos."},
-    {command: "php artisan queue:listen", description: "Escucha la cola de trabajos en segundo plano."},
-    {command: "php artisan make:job <NombreTrabajo>", description: "Crea un nuevo trabajo de cola."},
-    {command: "php artisan make:request <NombreSolicitud>", description: "Crea una nueva clase de solicitud."},
-    {command: "php artisan make:factory <NombreFabrica>", description: "Crea una nueva fábrica de modelos de prueba."},
-    {command: "php artisan serve --host=0.0.0.0 --port=8080", description: "Inicia el servidor de desarrollo de Laravel en una dirección IP específica y puerto."},
+    { command: "sudo tail -f /var/log/nginx/access.log", description: "Muestra en tiempo real el archivo de log de accesos de Nginx." },
+    { command: "php artisan list", description: "Muestra una lista de todos los comandos disponibles de Artisan." },
+    { command: "php artisan help <comando>", description: "Muestra ayuda para un comando específico de Artisan." },
+    { command: "php artisan make:model <NombreModelo>", description: "Crea un nuevo modelo." },
+    { command: "php artisan make:controller <NombreControlador>", description: "Crea un nuevo controlador." },
+    { command: "php artisan make:migration <NombreMigration>", description: "Crea una nueva migración de base de datos." },
+    { command: "php artisan migrate", description: "Ejecuta las migraciones pendientes de la base de datos." },
+    { command: "php artisan migrate:rollback", description: "Revierte la última migración de base de datos." },
+    { command: "php artisan db:seed", description: "Llena la base de datos con registros de prueba." },
+    { command: "php artisan route:list", description: "Muestra una lista de todas las rutas registradas." },
+    { command: "php artisan cache:clear", description: "Borra todas las entradas del caché." },
+    { command: "php artisan config:cache", description: "Crea un archivo caché para acelerar la carga de configuración." },
+    { command: "php artisan view:clear", description: "Borra todas las vistas compiladas." },
+    { command: "php artisan storage:link", description: "Crea el enlace simbólico de almacenamiento para la carpeta 'public'." },
+    { command: "php artisan key:generate", description: "Genera una nueva clave de aplicación." },
+    { command: "php artisan serve", description: "Inicia el servidor de desarrollo de Laravel." },
+    { command: "php artisan queue:work", description: "Escucha la cola de trabajos para ejecutarlos." },
+    { command: "php artisan schedule:run", description: "Ejecuta los trabajos programados definidos en 'App\Console\Kernel'." },
+    { command: "php artisan vendor:publish", description: "Publica cualquier recurso de un proveedor que no esté publicado todavía." },
+    { command: "php artisan route:cache", description: "Crea un archivo caché para acelerar la registración de rutas." },
+    { command: "php artisan route:clear", description: "Borra el archivo de caché de rutas." },
+    { command: "php artisan event:generate", description: "Genera clases de evento para eventos y listeners." },
+    { command: "php artisan make:middleware <NombreMiddleware>", description: "Crea un nuevo middleware." },
+    { command: "php artisan optimize", description: "Optimiza la carga de clases para un mejor rendimiento." },
+    { command: "php artisan down", description: "Pone la aplicación en modo de mantenimiento." },
+    { command: "php artisan up", description: "Saca la aplicación del modo de mantenimiento." },
+    { command: "php artisan tinker", description: "Inicia un REPL (Read-Eval-Print Loop) interactivo para Laravel." },
+    { command: "php artisan make:policy <NombrePolitica>", description: "Crea una nueva política de autorización." },
+    { command: "php artisan queue:failed", description: "Lista todos los trabajos de cola fallidos." },
+    { command: "php artisan queue:retry <ID>", description: "Reintenta un trabajo de cola fallido por su ID." },
+    { command: "php artisan queue:flush", description: "Borra todos los trabajos de cola fallidos." },
+    { command: "php artisan queue:listen", description: "Escucha la cola de trabajos en segundo plano." },
+    { command: "php artisan make:job <NombreTrabajo>", description: "Crea un nuevo trabajo de cola." },
+    { command: "php artisan make:request <NombreSolicitud>", description: "Crea una nueva clase de solicitud." },
+    { command: "php artisan make:factory <NombreFabrica>", description: "Crea una nueva fábrica de modelos de prueba." },
+    { command: "php artisan serve --host=0.0.0.0 --port=8080", description: "Inicia el servidor de desarrollo de Laravel en una dirección IP específica y puerto." },
 ];
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const commandsBody = document.getElementById('commandsBody');
@@ -96,11 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
         commandCell.textContent = cmd.command;
 
         const descriptionCell = document.createElement('td');
-        descriptionCell.textContent = cmd.description;
+        descriptionCell.innerHTML = cmd.description.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
         const copyCell = document.createElement('td');
         const copyButton = document.createElement('button');
-        copyButton.textContent = 'Copiar';
+        // si tien <param> en el comando se agrega generar comando si no solo copiar
+        copyButton.textContent = cmd.command.includes('<') ? 'Generar comando' : 'Copiar';
         copyButton.addEventListener('click', () => handleCopyButtonClick(cmd.command));
         copyCell.appendChild(copyButton);
 
@@ -121,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         form.querySelectorAll('input').forEach(input => {
             const param = input.getAttribute('data-param');
-            filledCommand = filledCommand.replace(`<${param}>`, input.value);
+            filledCommand = filledCommand.replaceAll(`<${param}>`, input.value);
         });
 
         navigator.clipboard.writeText(filledCommand).then(() => {
@@ -148,8 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Establecer el comando actual en el atributo de datos del formulario
             paramForm.setAttribute('data-command', command);
-
-            params.forEach(param => {
+            // limpiar repetidos params
+            const uniqueParams = new Set(params);
+            uniqueParams.forEach(param => {
                 const paramName = param.replace(/<|>/g, '');
                 const inputLabel = document.createElement('label');
                 inputLabel.textContent = `${paramName}: `;
@@ -168,3 +186,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+function searchCommands() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('commandsTable');
+    const tr = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < tr.length; i++) {
+        const tdCommand = tr[i].getElementsByTagName('td')[0];
+        const tdDescription = tr[i].getElementsByTagName('td')[1];
+        if (tdCommand || tdDescription) {
+            const commandText = tdCommand.textContent || tdCommand.innerText;
+            const descriptionText = tdDescription.textContent || tdDescription.innerText;
+            if (commandText.toLowerCase().indexOf(filter) > -1 || descriptionText.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+// agregar a #searchInput el evento onkeyup="searchCommands()" para que funcione la busqueda
+document.querySelector('#searchInput').addEventListener('keyup', searchCommands);
